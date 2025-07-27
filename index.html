@@ -3,71 +3,115 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Contact Us</title>
+  <title>Contact Form</title>
   <style>
     body {
-      font-family: sans-serif;
-      background: #f5f5f5;
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
       padding: 40px;
     }
-    form {
-      background: #fff;
-      padding: 30px;
+
+    .form-container {
       max-width: 500px;
       margin: auto;
+      background: white;
+      padding: 30px;
       border-radius: 10px;
-      box-shadow: 0 0 10px #ccc;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
+
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
     input, textarea {
       width: 100%;
-      margin-bottom: 15px;
-      padding: 10px;
-      border-radius: 5px;
+      padding: 12px;
+      margin: 10px 0 20px 0;
       border: 1px solid #ccc;
+      border-radius: 6px;
     }
+
     button {
+      width: 100%;
+      padding: 12px;
       background: #007bff;
       color: white;
-      padding: 12px;
-      width: 100%;
       border: none;
-      border-radius: 5px;
+      border-radius: 6px;
       cursor: pointer;
     }
+
     button:hover {
       background: #0056b3;
     }
-    label {
-      display: flex;
-      align-items: center;
-      margin-bottom: 15px;
+
+    .checkbox-group {
+      margin-bottom: 20px;
     }
-    label input[type="checkbox"] {
-      margin-right: 10px;
+
+    /* Honeypot field - invisible */
+    .hidden {
+      display: none;
     }
   </style>
 </head>
 <body>
 
-  <form action="https://api.web3forms.com/submit" method="POST">
-    <!-- Access Key (REQUIRED) -->
-    <input type="hidden" name="access_key" value="2d818c53-0521-4984-908b-a91cdae03cd2">
+  <div class="form-container">
+    <h2>Contact Us</h2>
+    <form id="contactForm" action="https://api.web3forms.com/submit" method="POST">
+      
+      <!-- Web3Forms Access Key -->
+      <input type="hidden" name="access_key" value="2d818c53-0521-4984-908b-a91cdae03cd2">
 
-    <!-- Honeypot -->
-    <input type="text" name="honeypot" style="display:none">
+      <!-- Honeypot field -->
+      <input type="text" name="honeypot" class="hidden" autocomplete="off">
 
-    <input type="text" name="name" placeholder="Your Name" required>
-    <input type="email" name="email" placeholder="Your Email" required>
-    <textarea name="message" placeholder="Your Message" required></textarea>
+      <!-- IP Address Capture -->
+      <input type="hidden" name="ip_address" id="ipAddress">
 
-    <!-- Are you human? -->
-    <label>
-      <input type="checkbox" name="human_check" required>
-      I'm not a robot
-    </label>
+      <!-- Name -->
+      <input type="text" name="name" placeholder="Your Name" required>
 
-    <button type="submit">Send Message</button>
-  </form>
+      <!-- Email -->
+      <input type="email" name="email" placeholder="Your Email" required>
+
+      <!-- Message -->
+      <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+
+      <!-- "I am not a robot" Checkbox -->
+      <div class="checkbox-group">
+        <input type="checkbox" id="humanCheck" required>
+        <label for="humanCheck">I'm not a robot</label>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit">Send Message</button>
+    </form>
+  </div>
+
+  <script>
+    // Get user IP and populate hidden field
+    fetch('https://api.ipify.org?format=json')
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('ipAddress').value = data.ip;
+      })
+      .catch(err => {
+        console.warn('IP fetch failed', err);
+      });
+
+    // Optional: Prevent form submit if honeypot is filled (extra layer)
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      const honeypot = document.querySelector('input[name="honeypot"]').value;
+      if (honeypot !== '') {
+        e.preventDefault(); // silently reject bots
+        console.warn('Bot detected via honeypot.');
+      }
+    });
+  </script>
 
 </body>
 </html>
