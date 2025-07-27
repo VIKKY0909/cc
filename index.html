@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Contact Us</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      background-color: #f9f9f9;
+    }
+    form {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      max-width: 500px;
+      margin: auto;
+    }
+    input, textarea, button {
+      width: 100%;
+      padding: 10px;
+      margin: 12px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+      border: none;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .success-message {
+      display: none;
+      text-align: center;
+      padding: 20px;
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<h2 style="text-align:center">Contact Us</h2>
+
+<div id="success" class="success-message">Thank you! Your message has been sent.</div>
+
+<form name="contact" method="POST" action="/" data-netlify="true" netlify-honeypot="bot-field">
+  <input type="hidden" name="form-name" value="contact">
+  <input type="hidden" name="ip" id="user-ip">
+  <p style="display:none">
+    <label>Don’t fill this out if you're human: <input name="bot-field"></label>
+  </p>
+
+  <p><input type="text" name="name" placeholder="Your Name" required></p>
+  <p><input type="email" name="email" placeholder="Your Email" required></p>
+  <p><textarea name="message" placeholder="Your Message" required></textarea></p>
+
+  <div data-netlify-recaptcha="true"></div>
+
+  <p><button type="submit">Send Message</button></p>
+</form>
+
+<script>
+  fetch("https://api.ipify.org?format=json")
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("user-ip").value = data.ip;
+    })
+    .catch(() => {
+      document.getElementById("user-ip").value = "Unavailable";
+    });
+
+  if (window.location.search.includes("success=true")) {
+    document.getElementById("success").style.display = "block";
+  }
+</script>
+
+</body>
+</html>
