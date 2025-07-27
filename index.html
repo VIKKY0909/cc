@@ -1,106 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Contact Us</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: sans-serif;
+      background: #f5f5f5;
       padding: 40px;
-      background-color: #f9f9f9;
     }
     form {
-      background: white;
+      background: #fff;
       padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       max-width: 500px;
       margin: auto;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #ccc;
     }
-    input, textarea, button {
+    input, textarea {
       width: 100%;
+      margin-bottom: 15px;
       padding: 10px;
-      margin: 12px 0;
+      border-radius: 5px;
       border: 1px solid #ccc;
-      border-radius: 6px;
     }
     button {
-      background-color: #007bff;
+      background: #007bff;
       color: white;
-      cursor: pointer;
+      padding: 12px;
+      width: 100%;
       border: none;
+      border-radius: 5px;
+      cursor: pointer;
     }
     button:hover {
-      background-color: #0056b3;
+      background: #0056b3;
     }
-    .success-message {
-      display: none;
-      text-align: center;
-      padding: 20px;
-      background-color: #d4edda;
-      color: #155724;
-      border: 1px solid #c3e6cb;
-      border-radius: 6px;
-      margin-bottom: 20px;
+    label {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    label input[type="checkbox"] {
+      margin-right: 10px;
     }
   </style>
 </head>
 <body>
 
-<h2 style="text-align:center">Contact Us</h2>
+  <form action="https://api.web3forms.com/submit" method="POST">
+    <!-- Access Key (REQUIRED) -->
+    <input type="hidden" name="access_key" value="2d818c53-0521-4984-908b-a91cdae03cd2">
 
-<div id="success" class="success-message">Thank you! Your message has been sent.</div>
+    <!-- Honeypot -->
+    <input type="text" name="honeypot" style="display:none">
 
-<form id="contact-form" action="https://api.web3forms.com/submit" method="POST">
-  <!-- Honeypot Field -->
-<input type="text" name="honeypot" style="display:none">
+    <input type="text" name="name" placeholder="Your Name" required>
+    <input type="email" name="email" placeholder="Your Email" required>
+    <textarea name="message" placeholder="Your Message" required></textarea>
 
-<input type="text" name="name" placeholder="Your Name" required>
-<input type="email" name="email" placeholder="Your Email" required>
-<textarea name="message" placeholder="Your Message" required></textarea>
+    <!-- Are you human? -->
+    <label>
+      <input type="checkbox" name="human_check" required>
+      I'm not a robot
+    </label>
 
-
-<label>
-  <input type="checkbox" name="human_check" required>
-  I'm not a robot
-</label>
-
-<button type="submit">Send Message</button>
-
-</form>
-
-<script>
-  // Get IP address and inject it into hidden field
-  fetch("https://api.ipify.org?format=json")
-    .then(res => res.json())
-    .then(data => {
-      document.getElementById("user-ip").value = data.ip;
-    })
-    .catch(() => {
-      document.getElementById("user-ip").value = "Unavailable";
-    });
-
-  // Optional: Show thank you message on submission
-  const form = document.getElementById("contact-form");
-  form.addEventListener("submit", function(e) {
-    e.preventDefault();
-    const formData = new FormData(form);
-
-    fetch(form.action, {
-      method: form.method,
-      body: formData,
-      headers: { 'Accept': 'application/json' }
-    }).then(response => {
-      if (response.ok) {
-        document.getElementById("success").style.display = "block";
-        form.reset();
-      } else {
-        alert("Submission failed. Please try again.");
-      }
-    });
-  });
-</script>
+    <button type="submit">Send Message</button>
+  </form>
 
 </body>
 </html>
