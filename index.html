@@ -1,117 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Contact Form</title>
+  <meta charset="UTF-8">
+  <title>Contact Us</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f2f2f2;
       padding: 40px;
+      background-color: #f9f9f9;
     }
-
-    .form-container {
-      max-width: 500px;
-      margin: auto;
+    form {
       background: white;
       padding: 30px;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      max-width: 500px;
+      margin: auto;
     }
-
-    h2 {
-      text-align: center;
-      color: #333;
-    }
-
-    input, textarea {
+    input, textarea, button {
       width: 100%;
-      padding: 12px;
-      margin: 10px 0 20px 0;
+      padding: 10px;
+      margin: 12px 0;
       border: 1px solid #ccc;
       border-radius: 6px;
     }
-
     button {
-      width: 100%;
-      padding: 12px;
-      background: #007bff;
+      background-color: #007bff;
       color: white;
-      border: none;
-      border-radius: 6px;
       cursor: pointer;
+      border: none;
     }
-
     button:hover {
-      background: #0056b3;
+      background-color: #0056b3;
     }
-
-    .checkbox-group {
-      margin-bottom: 20px;
-    }
-
-    /* Honeypot field - invisible */
-    .hidden {
+    .success-message {
       display: none;
+      text-align: center;
+      padding: 20px;
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+      border-radius: 6px;
+      margin-bottom: 20px;
     }
   </style>
 </head>
 <body>
 
-  <div class="form-container">
-    <h2>Contact Us</h2>
-    <form id="contactForm" action="https://api.web3forms.com/submit" method="POST">
-      
-      <!-- Web3Forms Access Key -->
-      <input type="hidden" name="access_key" value="2d818c53-0521-4984-908b-a91cdae03cd2">
+<h2 style="text-align:center">Contact Us</h2>
 
-      <!-- Honeypot field -->
-      <input type="text" name="honeypot" class="hidden" autocomplete="off">
+<div id="success" class="success-message">Thank you! Your message has been sent.</div>
 
-      <!-- IP Address Capture -->
-      <input type="hidden" name="ip_address" id="ipAddress">
+<form id="contact-form" action="https://api.web3forms.com/submit" method="POST">
+  <!-- Required Web3Forms Access Key -->
+  <input type="hidden" name="access_key" value="2d818c53-0521-4984-908b-a91cdae03cd2">
+  
+  <!-- Hidden IP Address Field -->
+  <input type="hidden" name="ip_address" id="user-ip">
 
-      <!-- Name -->
-      <input type="text" name="name" placeholder="Your Name" required>
+  <input type="text" name="name" placeholder="Your Name" required>
+  <input type="email" name="email" placeholder="Your Email" required>
+  <textarea name="message" placeholder="Your Message" required></textarea>
 
-      <!-- Email -->
-      <input type="email" name="email" placeholder="Your Email" required>
+  <button type="submit">Send Message</button>
+</form>
 
-      <!-- Message -->
-      <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+<script>
+  // Get IP address and inject it into hidden field
+  fetch("https://api.ipify.org?format=json")
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("user-ip").value = data.ip;
+    })
+    .catch(() => {
+      document.getElementById("user-ip").value = "Unavailable";
+    });
 
-      <!-- "I am not a robot" Checkbox -->
-      <div class="checkbox-group">
-        <input type="checkbox" id="humanCheck" required>
-        <label for="humanCheck">I'm not a robot</label>
-      </div>
+  // Optional: Show thank you message on submission
+  const form = document.getElementById("contact-form");
+  form.addEventListener("submit", function(e) {
+    e.preventDefault();
+    const formData = new FormData(form);
 
-      <!-- Submit Button -->
-      <button type="submit">Send Message</button>
-    </form>
-  </div>
-
-  <script>
-    // Get user IP and populate hidden field
-    fetch('https://api.ipify.org?format=json')
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById('ipAddress').value = data.ip;
-      })
-      .catch(err => {
-        console.warn('IP fetch failed', err);
-      });
-
-    // Optional: Prevent form submit if honeypot is filled (extra layer)
-    document.getElementById('contactForm').addEventListener('submit', function(e) {
-      const honeypot = document.querySelector('input[name="honeypot"]').value;
-      if (honeypot !== '') {
-        e.preventDefault(); // silently reject bots
-        console.warn('Bot detected via honeypot.');
+    fetch(form.action, {
+      method: form.method,
+      body: formData,
+      headers: { 'Accept': 'application/json' }
+    }).then(response => {
+      if (response.ok) {
+        document.getElementById("success").style.display = "block";
+        form.reset();
+      } else {
+        alert("Submission failed. Please try again.");
       }
     });
-  </script>
+  });
+</script>
 
 </body>
 </html>
