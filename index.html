@@ -53,17 +53,21 @@
 <div id="success" class="success-message">Thank you! Your message has been sent.</div>
 
 <form id="contact-form" action="https://api.web3forms.com/submit" method="POST">
-  <!-- Required Web3Forms Access Key -->
-  <input type="hidden" name="access_key" value="2d818c53-0521-4984-908b-a91cdae03cd2">
-  
-  <!-- Hidden IP Address Field -->
-  <input type="hidden" name="ip_address" id="user-ip">
+  <!-- Honeypot Field -->
+<input type="text" name="honeypot" style="display:none">
 
-  <input type="text" name="name" placeholder="Your Name" required>
-  <input type="email" name="email" placeholder="Your Email" required>
-  <textarea name="message" placeholder="Your Message" required></textarea>
+<input type="text" name="name" placeholder="Your Name" required>
+<input type="email" name="email" placeholder="Your Email" required>
+<textarea name="message" placeholder="Your Message" required></textarea>
 
-  <button type="submit">Send Message</button>
+
+<label>
+  <input type="checkbox" name="human_check" required>
+  I'm not a robot
+</label>
+
+<button type="submit">Send Message</button>
+
 </form>
 
 <script>
