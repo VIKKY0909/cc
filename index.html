@@ -52,7 +52,7 @@
 
 <div id="success" class="success-message">Thank you! Your message has been sent.</div>
 
-<form name="contact" method="POST" action="/" data-netlify="true" netlify-honeypot="bot-field">
+<form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/">
   <input type="hidden" name="form-name" value="contact">
   <input type="hidden" name="ip" id="user-ip">
   <p style="display:none">
@@ -78,8 +78,11 @@
       document.getElementById("user-ip").value = "Unavailable";
     });
 
-  if (window.location.search.includes("success=true")) {
+  if (window.location.search.includes("submitted=true")) {
     document.getElementById("success").style.display = "block";
+  }
+  if (window.location.search.includes("success=true")) {
+    window.location.href = "/?submitted=true";
   }
 </script>
 
